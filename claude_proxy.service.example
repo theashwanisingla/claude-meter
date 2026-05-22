@@ -1,0 +1,30 @@
+# Systemd user service for claude_proxy.py
+#
+# Setup (one time):
+#   1. Copy this file:
+#        cp claude_proxy.service.example ~/.config/systemd/user/claude-proxy.service
+#
+#   2. Edit the ExecStart path to match where you cloned this repo:
+#        ExecStart=/usr/bin/python3 /home/YOUR_USERNAME/path/to/claude-meter/claude_proxy.py
+#
+#   3. Enable and start:
+#        systemctl --user daemon-reload
+#        systemctl --user enable --now claude-proxy
+#
+#   Check status / logs:
+#        systemctl --user status claude-proxy
+#        journalctl --user -u claude-proxy -f
+
+[Unit]
+Description=Claude Usage Proxy
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/YOUR_USERNAME/path/to/claude-meter/claude_proxy.py
+Restart=on-failure
+RestartSec=15
+
+[Install]
+WantedBy=default.target
