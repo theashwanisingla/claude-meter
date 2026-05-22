@@ -4,7 +4,7 @@ A physical usage monitor for Claude Code, built on M5Stack Core2.
 
 Shows your 5h and 7d Claude usage limits on a small screen sitting on your desk. No need to check the terminal or app — just glance at the device.
 
-![Claude Meter](./preview.jpg)
+![Claude Meter](./images/WhatsApp%20Image%202026-05-23%20at%2012.43.27%20AM.jpeg)
 
 ---
 
