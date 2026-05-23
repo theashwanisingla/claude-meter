@@ -80,8 +80,12 @@ struct UsageData {
 UsageData     data;
 bool          wifiOk    = false;
 bool          fetching  = false;
-unsigned long lastFetch = 0;
-int           curView   = 0;
+unsigned long lastFetch  = 0;
+int           curView    = 0;
+int           swipeStartX = -1;
+
+const int SWIPE_MIN = 35;  // pixels of horizontal movement to count as a swipe
+const int TAP_MAX   = 15;  // max movement to still count as a tap
 
 int histBuf[HIST_SIZE];
 int histCount = 0;
@@ -480,10 +484,21 @@ void loop() {
     if (M5.Touch.getCount() > 0) {
         auto t = M5.Touch.getDetail(0);
         if (t.wasPressed()) {
-            int tx = t.x;
-            if      (tx < 80  && curView > 0)           { curView--; drawAll(); }
-            else if (tx > 240 && curView < NUM_VIEWS - 1){ curView++; drawAll(); }
-            else if (tx >= 80 && tx <= 240)              { fetchData(); drawAll(); }
+            swipeStartX = t.x;
+        }
+        if (t.wasReleased() && swipeStartX >= 0) {
+            int dx = t.x - swipeStartX;
+            swipeStartX = -1;
+            if (dx < -SWIPE_MIN && curView < NUM_VIEWS - 1) {
+                curView++;
+                drawAll();
+            } else if (dx > SWIPE_MIN && curView > 0) {
+                curView--;
+                drawAll();
+            } else if (abs(dx) <= TAP_MAX) {
+                fetchData();
+                drawAll();
+            }
         }
     }
 
